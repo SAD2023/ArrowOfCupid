@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "717300108794",
+    "project_id": "cupidsarrow-b50b3",
+    "storage_bucket": "cupidsarrow-b50b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717300108794:android:f496bd01171bb3f7e3e843",
+        "android_client_info": {
+          "package_name": "com.example.cupidsarrow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "717300108794-d9mrd87cmurgkk05if0kuf8flp6pk2lc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMN79IbzlySvV0mcT0asn_wU7ASfybhlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "717300108794-d9mrd87cmurgkk05if0kuf8flp6pk2lc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
