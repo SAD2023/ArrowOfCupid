@@ -1,39 +1,28 @@
 package com.example.cupidsarrow;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firestore.v1.Document;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
     String name;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
 
 
 
@@ -48,6 +37,36 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                // Create the NotificationChannel, but only on API 26+ because
+                // the NotificationChannel class is new and not in the support library
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    CharSequence name = getString(R.string.app_name);
+                    String description = "Very Serious";
+                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                    NotificationChannel channel = new NotificationChannel("2", name, importance);
+                    channel.setDescription(description);
+                    // Register the channel with the system; you can't change the importance
+                    // or other notification behaviors after this
+                    NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                    notificationManager.createNotificationChannel(channel);
+                }
+
+
+
+                Log.d("BEFORE N", "BEFORE");
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "2")
+                        .setSmallIcon(com.google.firebase.messaging.R.drawable.common_google_signin_btn_icon_dark)
+                        .setContentTitle("ASSHOLE")
+                        .setContentText("AAAAAAAAAAAAAAAAAAAA")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
+
+                // notificationId is a unique int for each notification that you must define
+                notificationManager.notify(17, builder.build());
+
+                Log.d("AFTER N", "AFTER");
                 // Do something in response to button click
                 TextInputLayout textInputLayout = findViewById(R.id.input1);
                 String text1 = textInputLayout.getEditText().getText().toString();
