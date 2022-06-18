@@ -27,6 +27,7 @@ import com.google.firestore.v1.Document;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -56,21 +57,37 @@ public class MainActivity extends AppCompatActivity {
 
 
                 View view = findViewById(android.R.id.content).getRootView();
-                //sendMessage(view, text);
 
 
-                DocumentReference ds = db.collection("usernames").document("Sadman");
+//                DocumentReference ds = db.collection("usernames").document("Sadman");
 
-                ds.get().addOnCompleteListener(result -> {
-                    Log.d("BEFORE", "BEFORE");
-                    String name = result.getResult().get("name").toString();
-                    String pass = result.getResult().get("pass").toString();
-                    Log.d("NAME", name);
-                    Log.d("PASS", pass);
-                    View view2 = findViewById(android.R.id.content).getRootView();
-                    sendMessage(view2, text1, text2, name, pass);
+                db.collection("usernames").whereEqualTo("name", text1).get().addOnCompleteListener(result ->
+                {
+                   if (result.isSuccessful() && (result.getResult().getDocuments().size() != 0)){
+
+                   DocumentSnapshot doc = result.getResult().getDocuments().get(0);
+                   String name = doc.get("name").toString();
+                   String pass = doc.get("pass").toString();
+                   View view2 = findViewById(android.R.id.content).getRootView();
+                   sendMessage(view2, text1, text2, name, pass);
+
+                   }
+
+                   else {
+                       Log.d("ERROR!", "Error getting documents: ", result.getException());
+                   }
                 });
-                Log.d("AFTER", "AFTER");
+
+//                ds.get().addOnCompleteListener(result -> {
+//                    Log.d("BEFORE", "BEFORE");
+//                    String name = result.getResult().get("name").toString();
+//                    String pass = result.getResult().get("pass").toString();
+//                    Log.d("NAME", name);
+//                    Log.d("PASS", pass);
+//                    View view2 = findViewById(android.R.id.content).getRootView();
+//                    sendMessage(view2, text1, text2, name, pass);
+//                });
+//                Log.d("AFTER", "AFTER");
 
 
 
