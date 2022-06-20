@@ -6,6 +6,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -52,21 +54,9 @@ public class MainActivity extends AppCompatActivity {
                     notificationManager.createNotificationChannel(channel);
                 }
 
+                sendnotification( MainActivity.this,"Hello There!", "General Kenobi");
 
-
-                Log.d("BEFORE N", "BEFORE");
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "2")
-                        .setSmallIcon(com.google.firebase.messaging.R.drawable.common_google_signin_btn_icon_dark)
-                        .setContentTitle("ASSHOLE")
-                        .setContentText("AAAAAAAAAAAAAAAAAAAA")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
-
-                // notificationId is a unique int for each notification that you must define
-                notificationManager.notify(17, builder.build());
-
-                Log.d("AFTER N", "AFTER");
+                //Log.d("AFTER N", "AFTER");
                 // Do something in response to button click
                 TextInputLayout textInputLayout = findViewById(R.id.input1);
                 String text1 = textInputLayout.getEditText().getText().toString();
@@ -127,5 +117,20 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), HomeScreen.class);
            startActivity(i);
         }
+    }
+
+    public static void sendnotification(Context context, String title, String content) {
+        //Log.d("BEFORE N", "BEFORE");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "2")
+                .setSmallIcon(com.google.firebase.messaging.R.drawable.common_google_signin_btn_icon_dark)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(17, builder.build());
+
     }
 }

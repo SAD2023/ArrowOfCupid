@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/CupidsArrow/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2265" />
         <entry key="..\:/CupidsArrow/app/src/main/res/layout-land/activity_main.xml" value="0.21164021164021163" />
-        <entry key="..\:/CupidsArrow/app/src/main/res/layout/activity_home_screen.xml" value="0.10989583333333333" />
+        <entry key="..\:/CupidsArrow/app/src/main/res/layout/activity_home_screen.xml" value="0.2" />
         <entry key="..\:/CupidsArrow/app/src/main/res/layout/activity_main.xml" value="0.19701086956521738" />
       </map>
     </option>
