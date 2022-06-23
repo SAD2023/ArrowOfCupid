@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                    String name = doc.get("name").toString();
                    String pass = doc.get("pass").toString();
                    View view2 = findViewById(android.R.id.content).getRootView();
-                   sendMessage(view2, text1, text2, name, pass);
+                   verify(view2, text1, text2, name, pass);
 
                    }
 
@@ -107,15 +107,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void sendMessage(View view, String user_input, String pass_input, String message, String pass) {
+    public void verify(View view, String user_input, String pass_input, String message, String pass) {
 
-        Log.d("message", message);
-        Log.d("user input", user_input);
-        Log.d("pass", pass);
-        Log.d("pass input", pass_input);
+        //Log.d("message", message);
+        //Log.d("user input", user_input);
+        //Log.d("pass", pass);
+        //Log.d("pass input", pass_input);
         if (message.equals(user_input) && pass.equals(pass_input)) {
             Intent i = new Intent(getApplicationContext(), HomeScreen.class);
-           startActivity(i);
+            i.putExtra("user", message);
+            startActivity(i);
         }
     }
 
