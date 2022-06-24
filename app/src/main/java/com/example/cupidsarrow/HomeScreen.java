@@ -3,6 +3,7 @@ package com.example.cupidsarrow;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 public class HomeScreen extends AppCompatActivity {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static String partner;
 
     @Override
@@ -42,36 +43,8 @@ public class HomeScreen extends AppCompatActivity {
         });
 
         // getting any outstanding kisses
-        db.collection("incoming").whereEqualTo("For", user).get().addOnCompleteListener(result ->
-        {
-            if (result.isSuccessful() && (result.getResult().getDocuments().size() != 0)){
+        outstanding_kisses(user, HomeScreen.this);
 
-                DocumentSnapshot doc = result.getResult().getDocuments().get(0);
-                String from = doc.get("From").toString();
-                String is_for = doc.get("For").toString();
-                MainActivity.sendnotification(HomeScreen.this, is_for + ", you have a new kiss!", "From " + from);
-
-                db.collection("incoming").document(user)
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d("ERROR", "DocumentSnapshot successfully deleted!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("ERROR", "Error deleting document", e);
-                            }
-                        });
-
-            }
-
-            else {
-                Log.d("ERROR!", "Error getting documents: ", result.getException());
-            }
-        });
 
         // what happens when someone sends a kiss
         Button button = (Button) findViewById(R.id.kissbutton);
@@ -104,4 +77,38 @@ public class HomeScreen extends AppCompatActivity {
 
             }});
     }
+
+    public static void outstanding_kisses(String user, Context context){
+        db.collection("incoming").whereEqualTo("For", user).get().addOnCompleteListener(result ->
+        {
+            if (result.isSuccessful() && (result.getResult().getDocuments().size() != 0)){
+
+                DocumentSnapshot doc = result.getResult().getDocuments().get(0);
+                String from = doc.get("From").toString();
+                String is_for = doc.get("For").toString();
+                MainActivity.sendnotification(context, is_for + ", you have a new kiss!", "From " + from);
+
+                db.collection("incoming").document(user)
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("ERROR", "DocumentSnapshot successfully deleted!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("ERROR", "Error deleting document", e);
+                            }
+                        });
+
+            }
+
+            else {
+                Log.d("ERROR!", "Error getting documents: ", result.getException());
+            }
+        });
+    }
 }
+

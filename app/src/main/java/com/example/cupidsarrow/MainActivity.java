@@ -1,11 +1,13 @@
 package com.example.cupidsarrow;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.app.Service;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -24,12 +27,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
 
         super.onCreate(savedInstanceState);
@@ -63,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
                 TextInputLayout textInputLayout2 = findViewById(R.id.input2);
                 String text2 = textInputLayout2.getEditText().getText().toString();
+
 
 
                 View view = findViewById(android.R.id.content).getRootView();
@@ -114,6 +114,10 @@ public class MainActivity extends AppCompatActivity {
         //Log.d("pass", pass);
         //Log.d("pass input", pass_input);
         if (message.equals(user_input) && pass.equals(pass_input)) {
+            Intent z = new Intent(this, LoveService.class);
+            z.putExtra("user", message);
+            startService(z);
+
             Intent i = new Intent(getApplicationContext(), HomeScreen.class);
             i.putExtra("user", message);
             startActivity(i);

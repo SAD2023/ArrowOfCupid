@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CupidsArrow"
         tools:targetApi="31">
+        <service android:name=".LoveService" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
