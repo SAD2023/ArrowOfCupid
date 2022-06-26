@@ -4,9 +4,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         Button button = (Button) findViewById(R.id.button1);
@@ -116,7 +120,11 @@ public class MainActivity extends AppCompatActivity {
         if (message.equals(user_input) && pass.equals(pass_input)) {
             Intent z = new Intent(this, LoveService.class);
             z.putExtra("user", message);
-            startService(z);
+            //startService(z);
+
+            ContextCompat.startForegroundService(
+                    this,
+                    z);
 
             Intent i = new Intent(getApplicationContext(), HomeScreen.class);
             i.putExtra("user", message);

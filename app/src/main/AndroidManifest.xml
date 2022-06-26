@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cupidsarrow">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CupidsArrow"
         tools:targetApi="31">
-        <service android:name=".LoveService" />
+        <service
+            android:name=".LoveService"
+            android:stopWithTask="false"
+            />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
