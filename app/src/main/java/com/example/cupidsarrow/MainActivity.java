@@ -6,6 +6,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -23,11 +25,24 @@ import android.app.Service;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.jakewharton.processphoenix.ProcessPhoenix;
 
 
 public class MainActivity extends AppCompatActivity {
     String name;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
 
     @Override
@@ -57,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     notificationManager.createNotificationChannel(channel);
                 }
 
-                sendnotification( MainActivity.this,"Hello There!", "General Kenobi");
+                //sendnotification( MainActivity.this,"Hello There!", "General Kenobi");
 
                 //Log.d("AFTER N", "AFTER");
                 // Do something in response to button click
@@ -67,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 TextInputLayout textInputLayout2 = findViewById(R.id.input2);
                 String text2 = textInputLayout2.getEditText().getText().toString();
 
+
+                DataHolder.getInstance().setData(text1);
+                Log.d("USER USER MAIN", text1);
 
 
                 View view = findViewById(android.R.id.content).getRootView();
@@ -109,9 +127,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     public void verify(View view, String user_input, String pass_input, String message, String pass) {
+
+        boolean x =  isMyServiceRunning(LoveService.class);
+        if (x == true){
+            Log.d("CALLED STOPSERVICE", Boolean.toString(x));
+            stopService(new Intent(MainActivity.this, LoveService.class));
+            Log.d("CALLED STOPSERVICE", user_input);
+            boolean y =  isMyServiceRunning(LoveService.class);
+            Log.d("CALLED STOPSERVICE", Boolean.toString(y));
+            ProcessPhoenix.triggerRebirth(MainActivity.this);
+            System.exit(0);
+        }
 
         //Log.d("message", message);
         //Log.d("user input", user_input);
@@ -146,4 +173,19 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(17, builder.build());
 
     }
+
+
+    public static void triggerRebirth(Context context, Intent nextIntent) {
+        Intent intent = new Intent(context, MainActivity.class);
+        //intent.addFlags
+        //intent.putExtra(KEY_RESTART_INTENT, nextIntent);
+        context.startActivity(intent);
+        if (context instanceof Activity) {
+            ((Activity) context).finish();
+        }
+
+        Runtime.getRuntime().exit(0);
+    }
+
 }
+

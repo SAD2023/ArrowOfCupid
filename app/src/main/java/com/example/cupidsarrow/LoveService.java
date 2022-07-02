@@ -1,6 +1,7 @@
 package com.example.cupidsarrow;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -56,7 +57,7 @@ import java.util.concurrent.TimeUnit;
 public class LoveService extends Service {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
+    private static String name_of_user;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 //        Log.d("SERVICE BEING STOPPED", "STOOOOOOOOOOOOOOOOOOP AAA");
@@ -65,11 +66,23 @@ public class LoveService extends Service {
 //        // START YOUR TASKS
 //        Log.d("SERVICE BEING STOPPED", "STOOOOOOOOOOOOOOOOOOP AAA");
 //        runtask(user);
-
+        name_of_user = intent.getExtras().getString("user");
         //ContextCompat.startForegroundService(this, intent);
+        // static intent.getExtras().getString("user");
         super.onStartCommand(intent, flags, startId);
 
-        return START_STICKY;
+        return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("DEBUGGING inside ONDESTROY", "DESTRUCTION!!!!");
+        Log.d("DEBUGGING inside ONDESTROY", "DESTRUCTION!!!!");
+        this.stopForeground(true);
+        stopForeground(true);
+        //android.os.Process.killProcess(android.os.Process.myPid());
+        this.stopSelf();
+        Log.d("DEBUGGING inside ONDESTROY", "DESTRUCTION!!!! ASS");
     }
 
     @Override
@@ -92,7 +105,10 @@ public class LoveService extends Service {
         assert manager != null;
         manager.createNotificationChannel(chan);
 
-        runtask("Sadman");
+        //Intent.getIntentOld()
+
+        Log.d("DEBUGGING USERNAME in STARTMYFOREGROUND", DataHolder.getInstance().getData());
+        runtask(DataHolder.getInstance().getData());
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         Notification notification = notificationBuilder.setOngoing(true)
@@ -113,12 +129,20 @@ public class LoveService extends Service {
 
     @Override
     public void onTaskRemoved(Intent rootIntent){
+
+        boolean x =  isMyServiceRunning(LoveService.class);
+        if (x == true){
+
+        }
+        String name = DataHolder.getInstance().getData();
         Intent z = new Intent(this, LoveService.class);
         //Bundle extras = rootIntent.getExtras();
-        Log.d("SERVICE BEING STOPPED", "STOOOOOOOOOOOOOOOOOOP BBBBBBBBBBBB");
+        Log.d("DEBUGGING", "ONTASKREMOVED");
         //String user = extras.getString("user");
         //Log.d("SERVICE BEING STOPPED", user);
-        z.putExtra("user", "Sadman");
+        z.putExtra("user", name);
+
+        Log.d("DEBUGGING USERNAME IN ONTASKREMOVED", name);
 
         startForegroundService(z);
 
@@ -131,7 +155,7 @@ public class LoveService extends Service {
 ////    }
 
     public void onStop(){
-        Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "B");
+        Log.d("DEBUGGING", "ONSTOP");
     }
 
 
@@ -164,17 +188,16 @@ public class LoveService extends Service {
     }
 
     public static void outstanding_kisses(String user, Context context){
-        Log.d("SERVICE BEING STOPPED", "STOOOOOOOOOOOOOOOOOOP  " + user);
-        Log.d("SERVICE BEING STOPPED", "STOOOOOOOOOOOOOOOOOOP EEE");
+        Log.d("DEBUGGING USER INSIDE OUTSTANDING:", user);
         db.collection("incoming").whereEqualTo("For", user).get().addOnCompleteListener(result ->
         {
-            Log.d("SERVICE BEING STOPPED", "STOOOOOOOOOOOOOOOOOOP EEE");
+            Log.d("DEBUGGING", "INSIDE DB COLLECTION");
             if (result.isSuccessful() && (result.getResult().getDocuments().size() != 0)){
 
                 DocumentSnapshot doc = result.getResult().getDocuments().get(0);
-                // COMMENT THIS BACK String from = doc.get("From").toString();
+                String from = doc.get("From").toString();
                 String is_for = doc.get("For").toString();
-                MainActivity.sendnotification(context, is_for + ", you have a new kiss!", "From " + "Someone!");
+                MainActivity.sendnotification(context, is_for + ", you have a new kiss!", "From " + from);
 
 
                 db.collection("incoming").document(user)
@@ -198,6 +221,16 @@ public class LoveService extends Service {
                 Log.d("ERROR!", "Error getting documents: ", result.getException());
             }
         });
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
